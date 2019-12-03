@@ -3,7 +3,7 @@ package two;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public enum Opcode
+enum Opcode
 {
 	IADD(1,  (mem, a, b, loc) -> mem[loc] = mem[a] + mem[b]),
 	IMUL(2,  (mem, a, b, loc) -> mem[loc] = mem[a] * mem[b]),

@@ -6,7 +6,7 @@ import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FuelProblem
+class FuelProblem
 {
 	/**
 	 * Using Math.floorDiv to clarify intention. We could rely on integer division.
