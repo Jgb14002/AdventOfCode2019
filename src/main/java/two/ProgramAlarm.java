@@ -8,19 +8,33 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProgramAlarm
 {
-	/**
-	 * Had to settle for brute forcing part II.
-	 */
 	public static void main(String[] args)
 	{
+		/**
+		 * Part I
+		 */
 		int[] partOne = runProgram(12, 2);
 		log.info("The value at memory addr 0 is: {}", partOne[0]);
 
-		for(int n = 0; n < 100; n++)
+		/**
+		 * Part II mathematical method
+		 */
+		int base = runProgram(0, 0)[0];
+		int dV = runProgram(1, 0)[0] - base;
+		int delta = 19690720 - base;
+
+		int verb = Math.floorDiv(delta, dV);
+		int noun = delta % dV;
+		log.info("100n + v = {} | n = {}, v = {}", 100 * noun + verb, noun, verb);
+
+		/**
+		 * Part II brute force method
+		 */
+		for (int n = 0; n < 100; n++)
 		{
-			for(int v = 0; v < 100; v++)
+			for (int v = 0; v < 100; v++)
 			{
-				if(runProgram(n, v)[0] == 19690720)
+				if (runProgram(n, v)[0] == 19690720)
 				{
 					log.info("100n + v = {} | n = {}, v = {}", 100 * n + v, n, v);
 					return;
@@ -35,10 +49,10 @@ public class ProgramAlarm
 		ins[1] = noun;
 		ins[2] = verb;
 
-		for(int i = 0; i < ins.length; i++)
+		for (int i = 0; i < ins.length; i++)
 		{
 			Opcode op = Opcode.forIns(ins[i]);
-			if(op == Opcode.IRET)
+			if (op == Opcode.IRET)
 			{
 				return ins;
 			}
@@ -50,10 +64,10 @@ public class ProgramAlarm
 	private static int[] getProgramIns()
 	{
 		List<Integer> ins = new ArrayList<>();
-		try(Scanner scanner = new Scanner(ProgramAlarm.class.getResourceAsStream("/two/program_data.txt")))
+		try (Scanner scanner = new Scanner(ProgramAlarm.class.getResourceAsStream("/two/program_data.txt")))
 		{
 			scanner.useDelimiter("[,\\n]");
-			while(scanner.hasNextInt())
+			while (scanner.hasNextInt())
 			{
 				ins.add(scanner.nextInt());
 			}
