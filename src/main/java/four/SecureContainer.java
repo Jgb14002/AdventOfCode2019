@@ -10,18 +10,20 @@ public class SecureContainer
 
 	public static void main(String[] args)
 	{
-		int count = 0;
+		int countA = 0;
+		int countB = 0;
 
 		for(int i = MIN; i <= MAX; i++)
 		{
-			if(isValid(i))  count++;
+			if(isValidA(i))  countA++;
+			if(isValidB(i))  countB++;
 		}
 
-		log.info("{} valid numbers in the given range.", count);
-
+		log.info("{} valid numbers in the given range.", countA);
+		log.info("{} valid numbers in the given range.", countB);
 	}
 
-	private static boolean isValid(int num)
+	private static boolean isValidA(int num)
 	{
 		int[] digits = digitize(num);
 
@@ -34,6 +36,24 @@ public class SecureContainer
 			tmp = (tmp & ~0xF) | cur;
 		}
 		return (tmp >> 4 & 1) == 1;
+	}
+
+	private static boolean isValidB(int num)
+	{
+		int[] digits = digitize(num);
+
+		int tmp = digits[0];
+		for(int i = 1; i < digits.length; i++)
+		{
+			if(digits[i] < (tmp & 0xF)) return false;
+			int cur = digits[i];
+			tmp = (cur == (tmp & 0xF)
+				? 1 + (tmp >> 4) << 4 | tmp & 0xF
+				: tmp >> 4 == 1
+				? (1 << 8) | (tmp >> 8) << 8 | tmp & 0xF
+				: (tmp >> 8) << 8 | tmp & 0xF) & ~0xF | cur;
+		}
+		return ((tmp >> 8 & 1) | (tmp >> 4 & 1)) == 1;
 	}
 
 	private static int[] digitize(int num)
