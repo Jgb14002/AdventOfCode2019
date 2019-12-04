@@ -62,7 +62,10 @@ class Circuit
 		{
 			head.translate(dir.getDx(), dir.getDy());
 			int bit = dir.getDx() == 0 ? VERTICAL : HORIZONTAL;
-			gridState.compute(head.getSnapshot(), (p, v) -> v == null ? (++steps << 4) | (bit << index * 2) : ((++steps << 4) + v & 0x7FFFFFF0) | v & 0xF | (bit << index * 2));
+			gridState.compute(head.getSnapshot(),
+				(p, v) -> v == null
+					? (++steps << 4) | (bit << index * 2)
+					: (++steps << 4) + v | (bit << index * 2));
 		}
 	}
 
