@@ -48,12 +48,13 @@ public class SecureContainer
 			if(digits[i] < (tmp & 0xF)) return false;
 			int cur = digits[i];
 			tmp = (cur == (tmp & 0xF)
-				? 1 + (tmp >> 4) << 4 | tmp & 0xF
+				? (1 << 4) + tmp
 				: tmp >> 4 == 1
-				? (1 << 8) | (tmp >> 8) << 8 | tmp & 0xF
-				: (tmp >> 8) << 8 | tmp & 0xF) & ~0xF | cur;
+				? (1 << 8) | tmp
+				: tmp & ~0xF0)
+				& ~0xF | cur;
 		}
-		return ((tmp >> 8 & 1) | (tmp >> 4 & 1)) == 1;
+		return ((tmp >> 8 | tmp >> 4) & 1) == 1;
 	}
 
 	private static int[] digitize(int num)
