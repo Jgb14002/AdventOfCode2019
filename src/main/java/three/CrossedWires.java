@@ -21,12 +21,23 @@ class CrossedWires
 			Circuit circuit = loadCircuit();
 			Map<Point, Integer> grid = circuit.getGridStates();
 
+
 			int distance = grid.entrySet().stream()
-				.filter(entry -> entry.getValue() == 12 || entry.getValue() == 18)
+				.filter(entry -> (entry.getValue() & 0xF) == 6 || (entry.getValue() & 0xF) == 9)
 				.mapToInt(entry -> entry.getKey().distanceTo(Circuit.ORIGIN))
 				.min().orElse(-1);
 
 			log.info("Closest point of intersection is {} units from the origin", distance);
+
+			/**
+			 * Part II
+			 */
+			int steps = grid.values().stream()
+				.filter(v -> (v & 0xF) == 6 || (v & 0xF) == 9)
+				.mapToInt(v -> v >> 4)
+				.min().orElse(-1);
+
+			log.info("Minimum steps: {}", steps);
 		}
 		catch (IOException e)
 		{

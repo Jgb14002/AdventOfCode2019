@@ -8,10 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class Circuit
 {
+	/**
+	 * To preserve the orientation of wires at given coordinates.
+	 * 2 wires could share coordinates but they would not "intersect" if they were parallel
+	 */
+	static final int VERTICAL = 0x01;
+	static final int HORIZONTAL = 0x02;
+
 	static final Point ORIGIN = new Point(0, 0);
-	static final int VISITED = 0x01; //left one here in case we need to do some pathfinding algos in part II
-	static final int VERTICAL = 0x02;
-	static final int HORIZONTAL = 0x04;
 
 	static Circuit create(String... wires)
 	{
@@ -37,6 +41,7 @@ class Circuit
 	}
 
 	private Point head;
+	private int steps;
 	private Map<Point, Integer> gridState;
 
 	private Circuit()
@@ -48,6 +53,7 @@ class Circuit
 	private void resetHead()
 	{
 		this.head = new Point(0, 0);
+		this.steps = 0;
 	}
 
 	private void advanceDirection(int index, Direction dir, int distance)
@@ -56,7 +62,7 @@ class Circuit
 		{
 			head.translate(dir.getDx(), dir.getDy());
 			int bit = dir.getDx() == 0 ? VERTICAL : HORIZONTAL;
-			gridState.compute(head.getSnapshot(), (p, v) -> v == null ? bit << index * 2 : (v << index * 2) | bit);
+			gridState.compute(head.getSnapshot(), (p, v) -> v == null ? (++steps << 4) | (bit << index * 2) : ((++steps << 4) + v & 0x7FFFFFF0) | v & 0xF | (bit << index * 2));
 		}
 	}
 
